@@ -9,10 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "material-icons": "^1.13.12",
+    "next": "15.0.4",
+    "next-auth": "^4.24.11",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "next": "15.0.4",
-    "material-icons": "^1.13.12",
+    "react-hook-form": "^7.54.0",
     "zustand": "^5.0.1"
   },
   "devDependencies": {
