@@ -4,20 +4,25 @@ import { Input } from "../components/input"
 import { SubmitButton } from "../components/submitButton"
 import { useEffect, useState } from "react"
 import { useScreenLoginStyleStore } from "../zustand/useScreenLoginStyleStore"
-import { useForm } from "react-hook-form"
+import { useForm } from "react-hook-form";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 export const LoginBox = () => {
    const style = useScreenLoginStyleStore((state) => state.style);
    const setStyle = useScreenLoginStyleStore((state) => state.setStyle);
    const [boxInfos, setBoxInfos] = useState();
-   
+   // const { data: session } = useSession();
+   // const router = useRouter();
+
+
    useEffect(() => {
-      style === "login" && setBoxInfos({title: "Login Auth", actionLink: {title: "Criar conta", link: "#"}, buttonValue: "Login"});
-      style === "create" && setBoxInfos({title: "Criar conta Auth", actionLink: {title: "Fazer login", link: "#"}, buttonValue:"Criar conta"});
-   },[style]);
-   
+      style === "login" && setBoxInfos({ title: "Login Auth", actionLink: { title: "Criar conta", link: "#" }, buttonValue: "Login" });
+      style === "create" && setBoxInfos({ title: "Criar conta Auth", actionLink: { title: "Fazer login", link: "#" }, buttonValue: "Criar conta" });
+   }, [style]);
+
    const { register, handleSubmit } = useForm();
-   function handleSignIn(data){
+   function handleSignIn(data) {
       console.log(data)
    }
 
@@ -39,7 +44,8 @@ export const LoginBox = () => {
                name="email"
                {...register('email')}
                placeholder="E-mail..."
-               resquired
+               required={true}
+               autoComplete="on"
             />
             <Input
                type="password"
@@ -47,7 +53,8 @@ export const LoginBox = () => {
                name="password"
                {...register('password')}
                placeholder="Senha..."
-               resquired
+               required={true}
+               autoComplete="on"
             />
             <SubmitButton
                className={`h-10 w-full outline-1 outline-blue-500  text-white rounded-md transition-all 
@@ -73,7 +80,7 @@ export const LoginBox = () => {
                href={`${boxInfos?.actionLink.link}`}
                className="mx-auto mt-3 underline text-blue-800 text-xs"
                onClick={(e) => {
-                  e.preventDefault(); 
+                  e.preventDefault();
                   setStyle(style === "login" ? "create" : "login");
                }}
             >
