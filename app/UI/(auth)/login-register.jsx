@@ -1,12 +1,11 @@
 'use client'
 import Link from "next/link"
-import { Input } from "../components/input"
-import { SubmitButton } from "../components/submitButton"
 import { useEffect, useState } from "react"
-import { useScreenLoginStyleStore } from "../zustand/useScreenLoginStyleStore"
-import { useForm } from "react-hook-form";
-import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/router";
+import { useForm } from "react-hook-form"
+import { Input } from "../../components/input"
+import { SubmitButton } from "../../components/submitButton"
+import { useScreenLoginStyleStore } from "../../zustand/useScreenLoginStyleStore"
+
 
 export const LoginBox = () => {
    const style = useScreenLoginStyleStore((state) => state.style);
@@ -26,7 +25,6 @@ export const LoginBox = () => {
       console.log(data)
    }
 
-
    return (
       <section
          className={`relative transition-all duration-300 z-10 flex flex-col justify-center items-stretch  h-[400px] w-80 rounded-md p-2 shadow-[2px_2px_20px_rgba(0,0,0,0.1)] bg-white
@@ -38,6 +36,16 @@ export const LoginBox = () => {
             onSubmit={handleSubmit(handleSignIn)}
             className={`flex flex-col gap-2 mt-2 text-sm text-gray-600`}
          >
+            {style === "create" &&
+               <Input
+               type="text"
+               className={"h-10 w-full border border-gray-300 rounded-md px-2 outline-1 outline-blue-500"}
+               name="name"
+               {...register('name')}
+               placeholder="Nome..."
+               required={true}
+               autoComplete="on"
+            />}
             <Input
                type="text"
                className={"h-10 w-full border border-gray-300 rounded-md px-2 outline-1 outline-blue-500"}

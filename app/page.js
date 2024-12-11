@@ -1,6 +1,4 @@
-import { LoginBox } from "./UI/loginBox";
-import Image from 'next/image';
-import { LoginMain } from "./UI/loginMain";
+import { LoginMain } from "./UI/(auth)/login-register-Box";
 
 export default function Home() {
    return (

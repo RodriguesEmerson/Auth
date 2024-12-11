@@ -1,0 +1,21 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(cuid()) //Gera um id aleatório para o usuário.
+  name String? //'?' significa que é (opcional).
+  email String @unique //Só pode ter um usuário com o mesmo e-mail.
+  password String?
+}
+
+//npx prisma db push  **cria o db*
+//npx prisma studio **visualiza o db**

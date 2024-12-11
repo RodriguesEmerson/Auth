@@ -1,13 +1,13 @@
 'use client'
 import Image from "next/image"
-import { LoginBox } from "./loginBox"
-import { useScreenLoginStyleStore } from "../zustand/useScreenLoginStyleStore"
+import { useScreenLoginStyleStore } from "../../zustand/useScreenLoginStyleStore"
+import { LoginBox } from "./login-register"
 
 export const LoginMain = () => {
 
    const style = useScreenLoginStyleStore((state) => state.style);
 
-   return (
+   return ( 
       <main
          className={`flex items-center justify-center min-h-[calc(100vh-64px)] bg-white `}
       >
