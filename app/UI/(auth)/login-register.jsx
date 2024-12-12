@@ -1,29 +1,22 @@
-'use client'
-import Link from "next/link"
-import { useEffect, useState } from "react"
-import { useForm } from "react-hook-form"
-import { Input } from "../../components/input"
-import { SubmitButton } from "../../components/submitButton"
-import { useScreenLoginStyleStore } from "../../zustand/useScreenLoginStyleStore"
+'use client';
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Input } from "../../components/input";
+import { SubmitButton } from "../../components/submitButton";
+import { useScreenLoginStyleStore } from "../../zustand/useScreenLoginStyleStore";
+import { usePathname } from "next/navigation";
+import register from "./_actions/register";
 
 
 export const LoginBox = () => {
    const style = useScreenLoginStyleStore((state) => state.style);
    const setStyle = useScreenLoginStyleStore((state) => state.setStyle);
-   const [boxInfos, setBoxInfos] = useState();
-   // const { data: session } = useSession();
-   // const router = useRouter();
-
+   const pathname = usePathname();
 
    useEffect(() => {
-      style === "login" && setBoxInfos({ title: "Login Auth", actionLink: { title: "Criar conta", link: "#" }, buttonValue: "Login" });
-      style === "create" && setBoxInfos({ title: "Criar conta Auth", actionLink: { title: "Fazer login", link: "#" }, buttonValue: "Criar conta" });
-   }, [style]);
-
-   const { register, handleSubmit } = useForm();
-   function handleSignIn(data) {
-      console.log(data)
-   }
+      setStyle(pathname.slice(1,));
+   }, [pathname]);
 
    return (
       <section
@@ -31,21 +24,25 @@ export const LoginBox = () => {
             ${style === "login" ? "left-[50%]" : "left-0"}
          `}
       >
-         <h1 className="text-center absolute top-3 w-[95%]">{boxInfos?.title}</h1>
+         {pathname === "/login" && <Login />}
+         {pathname === "/register" && <Register />}
+      </section>
+   )
+}
+
+function Login() {
+   const { register, handleSubmit } = useForm();
+   function handleSignIn(data) {
+      console.log(data)
+   }
+
+   return (
+      <>
+         <h1 className="text-center absolute top-3 w-[95%]">Entrar | NextAuth</h1>
          <form
             onSubmit={handleSubmit(handleSignIn)}
             className={`flex flex-col gap-2 mt-2 text-sm text-gray-600`}
          >
-            {style === "create" &&
-               <Input
-               type="text"
-               className={"h-10 w-full border border-gray-300 rounded-md px-2 outline-1 outline-blue-500"}
-               name="name"
-               {...register('name')}
-               placeholder="Nome..."
-               required={true}
-               autoComplete="on"
-            />}
             <Input
                type="text"
                className={"h-10 w-full border border-gray-300 rounded-md px-2 outline-1 outline-blue-500"}
@@ -65,36 +62,87 @@ export const LoginBox = () => {
                autoComplete="on"
             />
             <SubmitButton
-               className={`h-10 w-full outline-1 outline-blue-500  text-white rounded-md transition-all 
-                  ${style === "login" ? "bg-blue-800 hover:bg-blue-900" : "bg-purple-900 hover:bg-purple-950"}
-               `}
-               value={`${boxInfos?.buttonValue}`}
+               className={`h-10 w-full outline-1 outline-blue-500  text-white rounded-md transition-all  bg-blue-800 hover:bg-blue-900`}
+               value={`Entrar`}
             />
          </form>
+
          <div className="mx-auto mt-3">
-            {style === "login" &&
-               <>
-                  <Link
-                     href={"#"}
-                     className="underline text-blue-800 text-xs"
-                  >
-                     Recuperar senha
-                  </Link>
-                  <span className="mx-2 text-blue-800">|</span>
-               </>
-            }
+            <Link
+               href={"#"}
+               className="underline text-blue-800 text-xs"
+            >
+               Recuperar senha
+            </Link>
+            <span className="mx-2 text-blue-800">|</span>
 
             <Link
-               href={`${boxInfos?.actionLink.link}`}
+               href={`/register`}
                className="mx-auto mt-3 underline text-blue-800 text-xs"
-               onClick={(e) => {
-                  e.preventDefault();
-                  setStyle(style === "login" ? "create" : "login");
-               }}
             >
-               {boxInfos?.actionLink.title}
+               Criar conta
             </Link>
          </div>
-      </section>
+      </>
+   )
+}
+
+function Register() {
+   // const { register, handleSubmit } = useForm();
+   // function handleSignIn(data) {
+   //    console.log(data)
+   // }
+
+   return (
+      <>
+         <h1 className="text-center absolute top-3 w-[95%]">Criar conta | NextAuth</h1>
+         <form
+            action={register}
+            className={`flex flex-col gap-2 mt-2 text-sm text-gray-600`}
+         >
+            <Input
+               type="text"
+               className={"h-10 w-full border border-gray-300 rounded-md px-2 outline-1 outline-blue-500"}
+               name="name"
+               // {...register('name')}
+               placeholder="Nome..."
+               required={true}
+               autoComplete="on"
+            />
+            <Input
+               type="email"
+               className={"h-10 w-full border border-gray-300 rounded-md px-2 outline-1 outline-blue-500"}
+               name="email"
+               // {...register('email')}
+               placeholder="E-mail..."
+               required={true}
+               autoComplete="on"
+            />
+            <Input
+               type="password"
+               className={"h-10 w-full border border-gray-300 rounded-md px-2 outline-1 outline-blue-500"}
+               name="password"
+               // {...register('password')}
+               placeholder="Senha..."
+               required={true}
+               autoComplete="on"
+            />
+            <SubmitButton
+               className={`h-10 w-full outline-1 outline-blue-500  text-white rounded-md transition-all bg-purple-900 hover:bg-purple-950`}
+               value={`Criar conta`}
+            />
+         </form>
+
+         <div className="mx-auto mt-3 flex flex-row gap-1">
+            
+            <p className="text-xs">Já tem uma conta?</p>
+            <Link
+               href={`/login`}
+               className="mx-auto underline text-blue-800 text-xs"
+            >
+               Fazer Login
+            </Link>
+         </div>
+      </>
    )
 }
