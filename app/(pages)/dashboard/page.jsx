@@ -1,5 +1,5 @@
 
-export const Dashboard = () => {
+export default function Dashboard(){
    const session = false;
    if (!session) {
       return (

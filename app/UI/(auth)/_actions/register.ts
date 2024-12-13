@@ -1,6 +1,10 @@
+
+//Esse arquivo precisa ser declarado com 'use server' já que vai ser exposto ao 'use client'.
 'use server';
 
+import { redirect } from "next/navigation";
 import db from "../../../../lib/db";
+import { hashSync } from "bcrypt-ts"; 
 
 //As funções de servidor devem ser assíncronas;
 export default async function register(FormData: FormData){
@@ -13,11 +17,24 @@ export default async function register(FormData: FormData){
       throw new Error ("Todos os devem estar preenchidos.")
    }
 
+   //Verifica se o e-mail já existe na DB.
+   const user = await db.user.findUnique({
+      where:{
+         email: email
+      }
+   })
+   if(user){
+      throw new Error("Já existe um usuário com este e-amail!");
+   }
+
+   //Cria o novo usuário no DB.
    await db.user.create({
       data:{
          name: name,
          email: email,
-         password: password
+         password: hashSync(password) //criptografa a senha!
       }
-   })
+   });
+
+   redirect("/dashboard")
 }

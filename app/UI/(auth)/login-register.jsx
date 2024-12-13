@@ -7,6 +7,7 @@ import { SubmitButton } from "../../components/submitButton";
 import { useScreenLoginStyleStore } from "../../zustand/useScreenLoginStyleStore";
 import { usePathname } from "next/navigation";
 import register from "./_actions/register";
+import login from "./_actions/login";
 
 
 export const LoginBox = () => {
@@ -31,23 +32,24 @@ export const LoginBox = () => {
 }
 
 function Login() {
-   const { register, handleSubmit } = useForm();
-   function handleSignIn(data) {
-      console.log(data)
-   }
+   // const { register, handleSubmit } = useForm();
+   // function handleSignIn(data) {
+   //    console.log(data)
+   // }
 
    return (
       <>
          <h1 className="text-center absolute top-3 w-[95%]">Entrar | NextAuth</h1>
          <form
-            onSubmit={handleSubmit(handleSignIn)}
+            action={login}
+            // onSubmit={handleSubmit(handleSignIn)}
             className={`flex flex-col gap-2 mt-2 text-sm text-gray-600`}
          >
             <Input
-               type="text"
+               type="email"
                className={"h-10 w-full border border-gray-300 rounded-md px-2 outline-1 outline-blue-500"}
                name="email"
-               {...register('email')}
+               // {...register('email')}
                placeholder="E-mail..."
                required={true}
                autoComplete="on"
@@ -56,7 +58,7 @@ function Login() {
                type="password"
                className={"h-10 w-full border border-gray-300 rounded-md px-2 outline-1 outline-blue-500"}
                name="password"
-               {...register('password')}
+               // {...register('password')}
                placeholder="Senha..."
                required={true}
                autoComplete="on"
