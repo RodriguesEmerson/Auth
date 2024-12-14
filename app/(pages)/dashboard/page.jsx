@@ -1,6 +1,6 @@
 
 export default function Dashboard(){
-   const session = false;
+   const session = {user: {name:"Emerson"}};
    if (!session) {
       return (
          <div>

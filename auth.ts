@@ -21,7 +21,7 @@ export const {
          const email = credentials.email as string;
          const password = credentials.password as string;
          
-         if(!email || password){
+         if(!email || !password){
             return null;
          }
          
@@ -33,7 +33,7 @@ export const {
          if(!user){
             return null;
          }
-
+         
          //Compara a senha do input com a do DB.
          const matches = compareSync(password, user.password ?? '');
 
