@@ -1,14 +1,14 @@
 'use client';
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import { Input } from "../../components/input";
 import { SubmitButton } from "../../components/submitButton";
 import { useScreenLoginStyleStore } from "../../zustand/useScreenLoginStyleStore";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import register from "./_actions/register";
 import login from "./_actions/login";
-
+import { Spinner } from "../../components/spinner";
+import { auth } from "../../../auth";
 
 export const LoginBox = () => {
    const style = useScreenLoginStyleStore((state) => state.style);
@@ -32,41 +32,45 @@ export const LoginBox = () => {
 }
 
 function Login() {
-   // const { register, handleSubmit } = useForm();
-   // function handleSignIn(data) {
-   //    console.log(data)
-   // }
+   const [loging, setLoging] = useState(false);
+   const authStatus = {
+      getAuthStatus: async () => {
+         setLoging(true);
+         const session = await auth();
+         setLoging(false);
+      }
+   }
+
+   //Criando função para mostrar 'loading' ao clicar em entrar
 
    return (
       <>
          <h1 className="text-center absolute top-3 w-[95%]">Entrar | NextAuth</h1>
          <form
             action={login}
-            // onSubmit={handleSubmit(handleSignIn)}
+            onSubmit={() => authStatus.getAuthStatus()}
             className={`flex flex-col gap-2 mt-2 text-sm text-gray-600`}
          >
             <Input
                type="email"
-               className={"h-10 w-full border border-gray-300 rounded-md px-2 outline-1 outline-blue-500"}
                name="email"
-               // {...register('email')}
-               placeholder="E-mail..."
+               placeholder="E-mail"
                required={true}
-               autoComplete="on"
             />
             <Input
                type="password"
-               className={"h-10 w-full border border-gray-300 rounded-md px-2 outline-1 outline-blue-500"}
                name="password"
-               // {...register('password')}
-               placeholder="Senha..."
+               placeholder="Senha"
                required={true}
-               autoComplete="on"
             />
-            <SubmitButton
-               className={`h-10 w-full outline-1 outline-blue-500  text-white rounded-md transition-all  bg-blue-800 hover:bg-blue-900`}
-               value={`Entrar`}
-            />
+            <SubmitButton>
+               {loging
+                  ? <div className="flex items-center justify-center gap-1 "><Spinner />Entrando</div>
+                  : <p>Entrar</p>
+               }
+
+            </SubmitButton>
+
          </form>
 
          <div className="mx-auto mt-3">
@@ -104,39 +108,33 @@ function Register() {
          >
             <Input
                type="text"
-               className={"h-10 w-full border border-gray-300 rounded-md px-2 outline-1 outline-blue-500"}
                name="name"
                // {...register('name')}
-               placeholder="Nome..."
+               placeholder="Nome"
                required={true}
-               autoComplete="on"
             />
             <Input
                type="email"
-               className={"h-10 w-full border border-gray-300 rounded-md px-2 outline-1 outline-blue-500"}
                name="email"
                // {...register('email')}
                placeholder="E-mail..."
                required={true}
-               autoComplete="on"
             />
             <Input
                type="password"
-               className={"h-10 w-full border border-gray-300 rounded-md px-2 outline-1 outline-blue-500"}
                name="password"
                // {...register('password')}
                placeholder="Senha..."
                required={true}
-               autoComplete="on"
             />
-            <SubmitButton
-               className={`h-10 w-full outline-1 outline-blue-500  text-white rounded-md transition-all bg-purple-900 hover:bg-purple-950`}
-               value={`Criar conta`}
-            />
+            <SubmitButton>
+               <p>Criar conta</p>
+            </SubmitButton>
+
          </form>
 
          <div className="mx-auto mt-3 flex flex-row gap-1">
-            
+
             <p className="text-xs">Já tem uma conta?</p>
             <Link
                href={`/login`}

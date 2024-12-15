@@ -3,11 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import db from "./lib/db";
 import { compareSync } from "bcrypt-ts";
 
-export const {
-   handlers: {GET, POST}, 
-   auth,
-   signIn
-} = NextAuth({
+export const { handlers: {GET, POST}, auth, signIn } = NextAuth({
    // pages:{
    //    signIn: '/login',
    //    signOut: 'logout'
