@@ -8,7 +8,6 @@ import { usePathname, useSearchParams } from "next/navigation";
 import register from "./_actions/register";
 import login from "./_actions/login";
 import { Spinner } from "../../components/spinner";
-import { auth } from "../../../auth";
 
 export const LoginBox = () => {
    const style = useScreenLoginStyleStore((state) => state.style);
@@ -32,23 +31,34 @@ export const LoginBox = () => {
 }
 
 function Login() {
-   const [loging, setLoging] = useState(false);
-   const authStatus = {
-      getAuthStatus: async () => {
-         setLoging(true);
-         const session = await auth();
-         setLoging(false);
+   const [loading, setLoading] = useState(false);
+   const [loginError, setLoginError] = useState(false);
+
+   const actionLogin = {
+
+      //Dessa forma eu consigo tratar melhor o erro e o loading.
+      doLogin: async function(e) {
+         e.preventDefault();  
+         const {email, password} = Object.fromEntries(new FormData(e.target).entries());
+
+         setLoading(true);
+         setLoginError(false);
+         const response = await login({email: email, password: password});
+         setLoading(false);
+
+         if(!response)  setLoginError(true);
       }
    }
-
-   //Criando função para mostrar 'loading' ao clicar em entrar
-
+ 
    return (
       <>
          <h1 className="text-center absolute top-3 w-[95%]">Entrar | NextAuth</h1>
+         {loginError &&
+            <p className="text-sm font-extralight text-red-800 text-center">Email ou senha inválidos. Tente novamente!</p>
+         }
          <form
-            action={login}
-            onSubmit={() => authStatus.getAuthStatus()}
+            // action={login}
+            onSubmit={(e)=>actionLogin.doLogin(e)}
             className={`flex flex-col gap-2 mt-2 text-sm text-gray-600`}
          >
             <Input
@@ -63,10 +73,11 @@ function Login() {
                placeholder="Senha"
                required={true}
             />
+
             <SubmitButton>
-               {loging
-                  ? <div className="flex items-center justify-center gap-1 "><Spinner />Entrando</div>
-                  : <p>Entrar</p>
+               {!loading
+                  ? <p>Entrar</p>
+                  : <div className="flex items-center justify-center gap-1 "><Spinner />Entrando</div>
                }
 
             </SubmitButton>
