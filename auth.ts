@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import db from "./lib/db";
-import { compareSync } from "bcrypt-ts";
+import { compareSync, compare } from "bcrypt-ts";
 import { signInSchema } from "./lib/zod";
 
 
@@ -35,7 +35,7 @@ export const { handlers: { GET, POST }, auth, signIn } = NextAuth({
             }
 
             //Compara a senha do input com a do DB.
-            const matches = compareSync(password, user.password ?? '');
+            const matches = compare(password, user.password ?? '');
 
             if (matches) {
                return {
@@ -45,11 +45,13 @@ export const { handlers: { GET, POST }, auth, signIn } = NextAuth({
                }
             }
          } catch (error) {
-
+            console.log(error)
             return null;
          }
-
-
       }
-   })]
+   })],
+   session:{
+      strategy: "jwt", //Tokens JWT
+      maxAge: 1 * 24 * 60 * 60, //Sessão válida por 1 dia.
+   },
 })

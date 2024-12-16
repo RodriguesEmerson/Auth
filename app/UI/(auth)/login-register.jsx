@@ -39,11 +39,11 @@ function Login() {
       //Dessa forma eu consigo tratar melhor o erro e o loading.
       doLogin: async function(e) {
          e.preventDefault();  
-         const {email, password} = Object.fromEntries(new FormData(e.target).entries());
+         const formData = new FormData(e.target);
 
          setLoading(true);
          setLoginError(false);
-         const response = await login({email: email, password: password});
+         const response = await login(formData)
          setLoading(false);
 
          if(!response)  setLoginError(true);

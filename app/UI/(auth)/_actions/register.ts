@@ -32,7 +32,7 @@ export default async function register(FormData: FormData){
       data:{
          name: name,
          email: email,
-         password: hashSync(password) //criptografa a senha!
+         password: hashSync(password, 10) //criptografa a senha!
       }
    });
 
