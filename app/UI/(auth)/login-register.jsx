@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import { Input } from "../../components/input";
 import { SubmitButton } from "../../components/submitButton";
 import { useScreenLoginStyleStore } from "../../zustand/useScreenLoginStyleStore";
-import { usePathname, useSearchParams } from "next/navigation";
-import register from "./_actions/register";
+import { usePathname } from "next/navigation";
 import login from "./_actions/login";
 import { Spinner } from "../../components/spinner";
+import register from "./_actions/register";
 
 export const LoginBox = () => {
    const style = useScreenLoginStyleStore((state) => state.style);
@@ -57,7 +57,6 @@ function Login() {
             <p className="text-sm font-extralight text-red-800 text-center">Email ou senha inválidos. Tente novamente!</p>
          }
          <form
-            // action={login}
             onSubmit={(e)=>actionLogin.doLogin(e)}
             className={`flex flex-col gap-2 mt-2 text-sm text-gray-600`}
          >
@@ -79,7 +78,6 @@ function Login() {
                   ? <p>Entrar</p>
                   : <div className="flex items-center justify-center gap-1 "><Spinner />Entrando</div>
                }
-
             </SubmitButton>
 
          </form>
@@ -105,41 +103,59 @@ function Login() {
 }
 
 function Register() {
-   // const { register, handleSubmit } = useForm();
-   // function handleSignIn(data) {
-   //    console.log(data)
-   // }
+   const [loading, setLoading] = useState(false);
+   const [emailExist, setEmailExist] = useState(false);
+   
+   //Dessa forma eu consigo tratar melhor o erro e o loading.
+   const actionRegiter = {
+
+      doRegistration: async function(e) {
+         e.preventDefault();  
+         const formData = new FormData(e.target);
+
+         setLoading(true);
+         setEmailExist(false);
+         const response = await register(formData);
+         setLoading(false);
+
+         if(response?.error) setEmailExist(response.message);
+         if(!response) setEmailExist("A senha precisa ter entre 8 e 32 catacteres.")
+      }
+   }
 
    return (
       <>
          <h1 className="text-center absolute top-3 w-[95%]">Criar conta | NextAuth</h1>
+         {emailExist &&
+            <p className="text-sm font-extralight text-red-800 text-center">{emailExist}</p>
+         }
          <form
-            action={register}
+            onSubmit={(e)=> actionRegiter.doRegistration(e)}
             className={`flex flex-col gap-2 mt-2 text-sm text-gray-600`}
          >
             <Input
                type="text"
                name="name"
-               // {...register('name')}
                placeholder="Nome"
                required={true}
             />
             <Input
                type="email"
                name="email"
-               // {...register('email')}
                placeholder="E-mail..."
                required={true}
             />
             <Input
                type="password"
                name="password"
-               // {...register('password')}
                placeholder="Senha..."
                required={true}
             />
             <SubmitButton>
-               <p>Criar conta</p>
+               {!loading
+                  ? <p>Criar conta</p>
+                  : <div className="flex items-center justify-center gap-1 "><Spinner />Criando conta</div>
+               }
             </SubmitButton>
 
          </form>

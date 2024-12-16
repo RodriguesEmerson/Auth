@@ -14,7 +14,7 @@ export default async function register(FormData: FormData){
 
    //Aqui seria bom usar o Zod.
    if(!name || !email || !password){
-      throw new Error ("Todos os devem estar preenchidos.")
+      return {status: "error", message: 'Dados inválidos'}
    }
 
    //Verifica se o e-mail já existe na DB.
@@ -23,8 +23,9 @@ export default async function register(FormData: FormData){
          email: email
       }
    })
+   console.log(user);
    if(user){
-      throw new Error("Já existe um usuário com este e-amail!");
+      return {error: "error", message: 'Este email já está cadastrado!'}
    }
 
    //Cria o novo usuário no DB.
@@ -36,5 +37,5 @@ export default async function register(FormData: FormData){
       }
    });
 
-   redirect("/dashboard")
+   redirect("/dashboard");
 }

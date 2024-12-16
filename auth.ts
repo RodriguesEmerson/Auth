@@ -3,6 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import db from "./lib/db";
 import { compareSync, compare } from "bcrypt-ts";
 import { signInSchema } from "./lib/zod";
+import { ZodError } from "zod";
 
 
 export const { handlers: { GET, POST }, auth, signIn } = NextAuth({
@@ -51,7 +52,7 @@ export const { handlers: { GET, POST }, auth, signIn } = NextAuth({
       }
    })],
    session:{
-      strategy: "jwt", //Tokens JWT
+      strategy: "jwt", //Token JWT.
       maxAge: 1 * 24 * 60 * 60, //Sessão válida por 1 dia.
    },
 })
