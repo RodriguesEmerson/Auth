@@ -21,9 +21,10 @@ export const { handlers: { GET, POST }, auth, signIn } = NextAuth({
          try {
             //Valida as credenciasi com Zod.
             const { email, password } = await signInSchema.parseAsync(credentials);
+            console.log(email, password)
 
             if (!email || !password) {
-               return null;
+               throw new Error("Dados inválidos");
             }
 
             const user = await db.user.findUnique({
@@ -36,7 +37,7 @@ export const { handlers: { GET, POST }, auth, signIn } = NextAuth({
             }
 
             //Compara a senha do input com a do DB.
-            const matches = compare(password, user.password ?? '');
+            const matches = await compare(password, user.password ?? '');
 
             if (matches) {
                return {
@@ -45,6 +46,8 @@ export const { handlers: { GET, POST }, auth, signIn } = NextAuth({
                   email: user.email
                }
             }
+
+            return null;
          } catch (error) {
             console.log(error)
             return null;
